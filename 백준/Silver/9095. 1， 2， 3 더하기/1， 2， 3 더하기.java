@@ -1,37 +1,29 @@
 import java.util.Scanner;
 
 public class Main {
-    static int n,cnt;
-
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int T = sc.nextInt();
 
-        for(int tc=1; tc<=T; tc++){
-            n = sc.nextInt(); //정수 n이 주어졌다.
-            cnt = 0;
-           //n을 1,2,3의 합으로 나타내는 방법의 수는?
-           dfs(0); //여태까지 총합
+        for(int tc=1; tc<=T; tc++) {
+            int n = sc.nextInt();
+            int cnt = 0;
+            int[] dp = new int[n+1];
+            dp[0] = 1; //만약 0이라면 아무것도 안 더하는 경우 - 1가지가 존재한다.
 
-            System.out.println(cnt);
+            for(int tmp=1; tmp<=n; tmp++) {
+
+                if(tmp>=1) dp[tmp] += dp[tmp-1];
+                if(tmp>=2) dp[tmp] += dp[tmp-2];
+                if(tmp>=3) dp[tmp] += dp[tmp-3];
+            }
+
+            System.out.println(dp[n]);
+
+
         }//tc
-    }//main
-
-    static void dfs(int sum){
-        //기저조건 if - return
-        if(sum == n){
-            cnt++;
-            return;
-        }
-
-        if( sum > n){
-            return;
-        }
-
-        //재귀
-        dfs(sum+1);
-        dfs( sum+2);
-        dfs( sum+3);
     }
+
+
 
 }
