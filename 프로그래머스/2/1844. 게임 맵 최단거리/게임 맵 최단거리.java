@@ -53,7 +53,7 @@ class Solution {
             //기저조건
             if(r == n-1 && c == m-1){
                 min = curr.distance;
-                break;
+                return;
             }
             
             for(int d=0;d<4;d++){
