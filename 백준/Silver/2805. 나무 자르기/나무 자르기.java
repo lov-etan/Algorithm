@@ -24,7 +24,7 @@ public class Main {
 
         // 이분탐색 - 절단기 높이의 범위(0~나무의 최대 높이)를 설정하여 이 범위 안에서 이분탐색
         int left = 0;
-        int right = trees[N-1];
+        int right = trees[N-1]+1;
         int answer = 0;
 
         while(left < right){ //*** 공유기설치 문제와 비교해서 궁금한 점 (근사치도 가능할 때와 정확한 값을 원할 때의 범위 설정이 달라도 되는 것인가?
