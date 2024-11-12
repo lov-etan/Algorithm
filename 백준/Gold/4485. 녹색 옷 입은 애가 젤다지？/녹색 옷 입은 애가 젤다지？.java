@@ -83,10 +83,6 @@ public class Main {
 				int r  = curr.r;
 				int c = curr.c;
 				
-				if(curr.sum > dist[r][c]) { //이미 지나갔다는 말 (visited)
-					continue;
-				}
-				
 				for(int d=0; d<4; d++) {
 					int nr = r + dr[d];
 					int nc = c + dc[d];
