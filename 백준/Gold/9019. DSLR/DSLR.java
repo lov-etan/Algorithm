@@ -26,9 +26,9 @@ public class Main {
             while(!q.isEmpty()){
                 int curr = q.poll();
 
-                if(curr == B){
-                    ans = commands[curr];
-                }
+//                if(curr == B){
+//                    ans = commands[curr];
+//                }
 
                 int num_D = (curr*2) % 10000;
                 int num_S = curr == 0? 9999:curr-1;
@@ -58,7 +58,7 @@ public class Main {
 
             }
 
-            System.out.println(ans);
+            System.out.println(commands[B]); //dist[][]처럼 사용했으면 값 출력도 dist[][]처럼!!
 
 
         } //tc
