@@ -9,46 +9,44 @@ class Solution {
         this.diffs = diffs;
         this.times = times;
         this.limit = limit;
-        n = diffs.length;
         int answer = 0;
+        n = diffs.length;
         
-        
+        //right 범위 설정을 위해 diff 중 최대로 나올 수 있는 수 구하기
         int maxDiff = 0;
-        for(int i=0; i<diffs.length; i++){
-            maxDiff = Math.max(maxDiff, diffs[i]);
+        for(int i=0; i<n; i++){
+            maxDiff = Math.max(diffs[i], maxDiff);
         }
         
-        //level 최소, 최대 범위 설정 
-        int left = 1;
+        //level의 범위
+        int left = 1; //양의 정수
         int right = maxDiff + 1;
         
+        //이분 탐색
         while(left < right){
-            int level = (left+right)/2;
+            int level = (left+right)/2; //mid = Level
+            long time = play(level); 
             
-            long time = game(level);
-            if(time <= limit){
-                right = level; //시간 널널해? -> level 더 낮춰보자 //limit이랑 같아? level 더 줄여봐
-                answer = level; //'최소'값을 구해야 하기 때문에 작은 값으로 가는 것을 선택
-
+            if(time <= limit) {
+                right = level; //시간이 남아나(limit까지 여유가 있어) -> Level 더 줄여봐 
+                answer = level; //limit이랑 같아? -> 더 줄여봐(우린 최소 Level을 원해)
             } else {
-                left = level+1; //제한 시간 안에 못 들어와? -> level 더 키워야 해
-
+                left = level+1; //시간 초과 -> Level 키우자 
             }
         }
-
+        
         return answer;
-        
-        
     }
     
-    public long game(int level){
+    
+    public long play(int level){
         long sum = 0;
         
         for(int i=0; i<n; i++){
-            if(diffs[i] <= level) {
+            if(diffs[i]<=level){
                 sum += times[i];
             } else {
-                sum += (diffs[i]-level)*(times[i] + times[i-1]) + times[i];
+                sum += (diffs[i] - level)*(times[i]+times[i-1]) + times[i];
             }
         }
         
