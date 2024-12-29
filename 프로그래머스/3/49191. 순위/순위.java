@@ -1,35 +1,40 @@
+import java.util.*;
 class Solution {
     public int solution(int n, int[][] results) {
         int answer = 0;
         int[][] adjArr = new int[n+1][n+1];
         
-        // 이겼을 경우 - 인접행렬에 1 표시
+        //인접행렬 - adjArr[이긴][진] = 1
         for(int i=0; i<results.length; i++){
-            adjArr[results[i][0]][results[i][1]] = 1; //results[4,3] -> 4>3 -> 인접행렬[4][3] = 1 (이 경우 이김) 
+            adjArr[results[i][0]][results[i][1]] = 1; //results 활용하여 이기고 진 것 판단
         }
-        for(int a=0; a<=n; a++){ //A>B. B>C 이면 -> A>C 이다. // 플로이드-워셜 알고리즘 '무조건 중간 중심!'
-            for(int b=0; b<=n; b++){
-                for(int c=0; c<=n; c++){
-                    if(adjArr[b][a] == 1 && adjArr[a][c] == 1){
+        for(int a=1; a<=n; a++){
+            for(int b=1; b<=n; b++){
+                for(int c=1; c<=n; c++){
+                    if(adjArr[b][a] == 1 && adjArr[a][c] == 1){  // && !!! 놓치지 않기@@@
+                        //중간 b를 기준으로 하여 ( b>a,a>c 이면 b>c 
                         adjArr[b][c] = 1;
                     }
                 }
             }
         }
+        System.out.println(Arrays.deepToString(adjArr));
         
-        //Node에 대한 경기결과(1)가 n-1개이면 정확한 순위 도출 가능
+        //정확한 순위는 언제 알아지지? - 해당하는 경기 결과가 N-1일 때
         for(int node=1; node<=n; node++){
-            int play = 0;
-            for(int c=1; c<=n; c++){
-                if(adjArr[node][c] == 1 || adjArr[c][node] == 1){
-                    play++;
+            int cnt = 0;
+            for(int c=1; c<=n ; c++){
+                if(adjArr[node][c]==1 || adjArr[c][node]==1){
+                    cnt++;
                 }
             }
             
-            if(play == n-1){
-                    answer++;
+            if(cnt == n-1){
+                answer++;
             }
         }
+        
+        
         
         return answer;
     }
