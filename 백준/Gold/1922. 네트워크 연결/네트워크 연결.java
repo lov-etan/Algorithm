@@ -1,85 +1,62 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
-
-    public static class Edge{
-        int A;
-        int B;
-        int W; //가중치
-
-        public Edge(int a, int b, int w){
-            this.A = a;
-            this.B = b;
-            this.W = w;
-        }
-
-        public int getW(){
-            return W;
-        }
-    }
-
-    static int[] p; //정점들의 대표자 표시 배열
-
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        int N = sc.nextInt(); //정점의 수
-        int M = sc.nextInt(); //간선의 수
-
-        p = new int[N+1];
-        for(int i=0; i<N+1; i++){ //0은 음이 아닌 정수이다. //a, b 정수이다.
-            p[i] = i;
-        }
-
-        //크루스칼 알고리즘 제 1장: 가중치 기준으로 정렬
-        PriorityQueue<Edge> pq = new PriorityQueue<>(Comparator.comparingInt(Edge::getW));
-        for(int i=0; i<M; i++){
-            int A = sc.nextInt();
-            int B = sc.nextInt();
-            int W = sc.nextInt();
-
-            Edge edge = new Edge(A, B, W);
-            pq.add(edge);
-
-        }
-
-        int cost = 0;
-
-        //크루스칼 알고리즘 제 2장: 간선의 개수-1 만큼 뽑으면 끝/ 우선순위큐에서는 큐가 비면 끝
-        while(!pq.isEmpty()){
-            Edge out = pq.poll();
-
-            int a = out.A;
-            int b = out.B;
-            int w = out.W;
-
-            int px = findSet(a);
-            int py = findSet(b);
-
-            if(px != py){
-                union(px,py); //연결이 되었다면
-                cost += w; //간선 check!!
-            }
-        }
-
-        System.out.println(cost);
-
-
-    }//main
-
-    static void union(int a, int b){
-        //p[findSet(b)] = findSet(a);
-          p[b] = a;
-    }
-    static int findSet(int a){
-        if(p[a] == a) {
-            return a;
-        } else {
-            p[a] = findSet(p[a]);
-            return p[a];
-        }
-    }
+	static int N, M;
+	static int[] p;
+	
+	public static void main(String[] args) throws IOException{
+		int answer = 0;
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+		
+		int N = Integer.parseInt(br.readLine());
+		int M = Integer.parseInt(br.readLine());
+		p = new int[N+1];
+		for(int i=1; i<=N; i++) {
+			p[i] = i;
+		}
+		
+		int[][] results = new int[M][3];
+		for(int i=0; i<M; i++) {
+			st = new StringTokenizer(br.readLine());
+			results[i][0] = Integer.parseInt(st.nextToken());
+			results[i][1] = Integer.parseInt(st.nextToken());
+			results[i][2] = Integer.parseInt(st.nextToken());
+			
+		}
+		
+		Arrays.sort(results, new Comparator<int[]>() {
+			@Override
+			public int compare(int[] o1, int[] o2) {
+				return o1[2]-o2[2];
+			}
+		});
+		
+		for(int i=0; i<M; i++) {
+			if(findset(results[i][0]) != findset(results[i][1])) {
+				union(results[i][0] , results[i][1]);
+				answer += results[i][2];
+			}
+		}
+		
+		System.out.println(answer);
+		
+		
+	}
+	
+	static int findset(int a) {
+		if(p[a] != a) {
+			p[a] = findset(p[a]);
+		}
+		return p[a];
+	}
+	
+	static void union(int a, int b) {
+		p[findset(b)] = findset(a);
+	}
 }
