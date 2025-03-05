@@ -7,6 +7,7 @@ public class Main{
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
+        StringBuilder sb = new StringBuilder();
 
         st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
@@ -25,10 +26,12 @@ public class Main{
         for(int k=1; k<=M; k++) {
             String input = br.readLine();
             if(map.containsKey(input)) {
-                System.out.println(map.get(input));
+                sb.append(map.get(input) + "\n");
             } else {
-                System.out.println(map2.get(input));
+                sb.append(map2.get(input) + "\n");
             }
         }
+
+        System.out.println(sb);
     }
 }
