@@ -2,4 +2,4 @@
 SELECT product_code, (p.price * sum(off.sales_amount)) as sales
 FROM product as p JOIN offline_sale as off ON p.product_id = off.product_id
 GROUP BY product_code
-ORDER BY (p.price * sum(off.sales_amount)) desc, product_code asc
+ORDER BY sales desc, product_code asc
