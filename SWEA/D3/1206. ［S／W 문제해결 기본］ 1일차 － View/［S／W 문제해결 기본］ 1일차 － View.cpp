@@ -5,35 +5,20 @@ vector<int> v;
 
 int cntViewOk(int idx, int minCnt) {
     //왼 -1 왼 -2 오 +1 오 +2
-    if(v[idx-1] < v[idx]) {
-        minCnt = v[idx] - v[idx-1];
-        
-        if(v[idx-2] < v[idx]) {
-        minCnt = min(minCnt, v[idx] - v[idx-2]);
+    int maxBuilding = max({v[idx-1], v[idx-2], v[idx+1], v[idx+2]});
 
-            if(v[idx+1] < v[idx]) {
-                minCnt = min(minCnt, v[idx] - v[idx+1]);
-
-                if(v[idx+2] < v[idx]) {
-                    minCnt = min(minCnt, v[idx] - v[idx+2]);
-                } else {
-                    return 0;
-                }
-            }  else {
-                return 0;
-            }
-        } else {
-            return 0;
-        }
-    } else {
-        //cout << "조망권확보x " << idx << "\n";
-        return 0;
+    if(maxBuilding <v[idx]) {
+        minCnt = v[idx] - maxBuilding;
     }
-    //cout << idx << " " << minCnt << "\n";
+    
     return minCnt;
 }
 
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    
     for(int tc=1; tc<=10; tc++) {
         cin >> N;
         v.assign(N, 0);
