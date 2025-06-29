@@ -1,5 +1,8 @@
--- 상품코드 별 매출액(판매가 * 판매량) -상품코드 앞2자리: 카테고리 코드
-SELECT product_code, (p.price * sum(off.sales_amount)) as sales
-FROM product as p JOIN offline_sale as off ON p.product_id = off.product_id
+# 상품코드 별 매출액(판매가*판매량) 합계
+SELECT p.product_code, (s.sum_amount * p.price) as sales
+FROM product as p
+    JOIN (SELECT *, SUM(sales_amount) as sum_amount 
+          FROM offline_sale GROUP BY product_id) as s
+    ON p.product_id = s.product_id
 GROUP BY product_code
-ORDER BY sales desc, product_code asc
+ORDER BY 2 DESC, 1
