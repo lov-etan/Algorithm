@@ -4,54 +4,66 @@
 
 using namespace std;
 
+int N;
+
+        // 하 우 상 좌
 int dr[] = {1, 0, -1, 0};
 int dc[] = {0, 1, 0, -1};
 
+bool inRange(int nr, int nc) {
+    return nr>=0 && nr<N && nc>=0 && nc<N;
+}
+
 int main() {
-    int N; int k;
-    cin >> N >> k;
 
-    vector<vector<int>> arr(N, vector<int>(N, 0));
+    int target;
+    cin >> N >> target;
 
-    int num = pow(N,2);
-    int r = 0;
-    int c = 0;
+    vector<vector<int>> v(N, vector<int>(N,0));
+    pair<int, int> tRC;
+
+    int curr = pow(N,2);
     int d = 0;
-    pair<int, int> pos = {1,1}; 
+    int r = 0; int c = 0;
+
+    v[r][c] = curr;
+    curr--;
     
-    arr[r][c] = num;
-    num--;
+    while(curr >= 1) {
 
-    while(num >= 1) {
-        int nxtR = r + dr[d];
-        int nxtC = c + dc[d];
+        int nr = r + dr[d];
+        int nc = c + dc[d];
 
-        if(nxtR < 0 || nxtR >= N || nxtC < 0 || nxtC >= N || arr[nxtR][nxtC] != 0) {
-            // 방향 바꾸기
-            d = (d+1)%4;
-            nxtR = r + dr[d];
-            nxtC = c + dc[d];
+        if(!inRange(nr, nc) || v[nr][nc] != 0) {
+            // cout << curr << "\n";
+            d = (d+1) %4;
+            nr = r + dr[d];
+            nc = c + dc[d];
         }
 
-        r = nxtR;
-        c = nxtC;
+        // cout << curr << "d " << d << " r " <<  nr << " c " <<  nc << "\n";
 
-        if(num == k) {
-            pos = {r+1, c+1};
+        r = nr; 
+        c = nc;
+        v[r][c] = curr;
+
+        if(curr == target) {
+            tRC = {r, c};
         }
-        
-        arr[nxtR][nxtC] = num--;
 
+        curr--;
     }
 
-    for(int r=0; r<N; r++) {
-        for(int c=0; c<N; c++) {
-            cout << arr[r][c] << " ";
+    for(int i=0; i<N; i++) {
+        for(int j=0; j<N; j++) {
+            cout << v[i][j] << " ";
         }
         cout << "\n";
     }
 
-    cout << pos.first << " " << pos.second;
+    cout << tRC.first+1 << " " << tRC.second+1;
+
+    
     
     return 0;
 }
