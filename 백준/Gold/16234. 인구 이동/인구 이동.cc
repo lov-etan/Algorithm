@@ -6,7 +6,6 @@ using namespace std;
 
 int N, L, R; int ans; int currNum;
 bool moved;
-vector<int> population;
 vector<vector<int>> A; vector<vector<int>> dp;
 queue<pair<int,int>> q; queue<pair<int,int>> q2;
 
@@ -15,15 +14,6 @@ int dc[] = {0, 1, 0, -1};
 
 bool inRange(int r, int c) {
     return r>=0 && r<N && c>=0 && c<N;    
-}
-
-void bfs2() {
-    while(!q2.empty()) {
-        pair curr = q2.front(); q2.pop();
-        int r= curr.first; int c= curr.second;
-    
-        A[r][c] = population[dp[r][c]];
-    }
 }
 
 void bfs() {
@@ -46,13 +36,17 @@ void bfs() {
     }
 
     int newVal = sum/q2.size();
-    population[currNum] = newVal;
+    while(!q2.empty()) {
+        pair curr = q2.front(); q2.pop();
+        int r= curr.first; int c= curr.second;
+    
+        A[r][c] = newVal;
+    }
 }
 
 void makingIsland() {
     while(1) {
         dp.assign(N, vector<int>(N,0));
-        population.assign(2500,0);
         currNum = 1;
         moved = false;
         
@@ -62,7 +56,6 @@ void makingIsland() {
                     dp[r][c] = currNum;
                     q.push({r,c});
                     bfs();
-                    bfs2(); 
                     currNum++;
                 }
             }
