@@ -1,39 +1,37 @@
-//1부터 N까지 자연수 중 중복 없이 M개를 고른 수열
-
 #include <iostream>
 #include <vector>
+
 using namespace std;
+
 int N, M;
-vector<int> sel;
-vector<bool> visited;
+vector<bool> vis;
 
-void nCm(int selIdx) {
-
-    if(selIdx == M) {
-        for(int i=0; i<M ;i++) {
-            cout << sel[i] << " ";
+void dfs(vector<int>& ans) {
+    if(ans.size() == M) {
+        for(auto c : ans) {
+            cout << c << " ";
         }
-            cout << '\n';
+        cout << "\n";
         return;
     }
 
-    for(int num=1; num<=N; num++) {
-        if(!visited[num]) {
-            visited[num] = true;
-            sel[selIdx] = num;
-            nCm(selIdx+1);
-
-            visited[num] = false; //방문 닫아주기!
-        }
+    for(int i=1; i<=N; i++) {
+        if(vis[i]) continue;
+        
+        vis[i] = true; ans.push_back(i);
+        dfs(ans);
+        
+        vis[i] = false; ans.pop_back();
     }
+
+    return;
 }
 
 int main() {
-    cin >> N >> M;
-    sel.assign(M+1, 0);
-    visited.assign(N+1,false);
-
-    nCm(0);
+    cin >> N >> M; 
+    vis.resize(N+1, false);
+    vector<int> ans(0);
     
+    dfs(ans);
     return 0;
 }
