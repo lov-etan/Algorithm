@@ -1,0 +1,7 @@
+-- 두 번 이상 쓰인 이름(이름별), 이름이 쓰인 횟수
+SELECT name, COUNT(animal_id) as count
+FROM animal_ins
+WHERE name is not null
+GROUP BY 1
+HAVING count >= 2
+ORDER BY 1
