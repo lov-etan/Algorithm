@@ -5,13 +5,11 @@
 using namespace std;
 
 int R, C; int ans; int INF;
-int jR = 0; int jC =  0;
 vector<vector<int>> fireDP;
 vector<vector<int>> maps;
 vector<vector<bool>> vis;
 queue<vector<int>> jQ;
 queue<pair<int,int>> fQ;
-
 
 int dr[] = {-1,0,1,0};
 int dc[] = {0, 1, 0, -1};
@@ -47,9 +45,9 @@ int main() {
             }
             else if(a[c] == 'J') {
                 maps[r][c] = 3;
+                fireDP[r][c] = INF;
                 jQ.push({r,c,0});
                 vis[r][c] = true;
-                jR = r; jC = c;
             }       
         }
     }
@@ -66,17 +64,8 @@ int main() {
 }
 
 void spreadFire() {
-    int size = fQ.size();
-    int time = 1;
-    while(!fQ.empty()) {
-        
-        if(size == 0) {
-            size = fQ.size();
-            time++;
-        }
-        
+    while(!fQ.empty()) {      
         auto[r,c] = fQ.front(); fQ.pop();
-        size--;
 
         for(int d=0; d<4; d++) {
             int nr = r + dr[d];
