@@ -1,30 +1,30 @@
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
-vector<int> s_numbers;
-int s_target = 0;
+vector<int> arr;
+int K;
 int answer = 0;
 
 void dfs(int idx, int sum) {
-    if(idx == s_numbers.size()) {
-        if(sum == s_target) answer++;
+    if(idx == arr.size()) {
+        if(sum == K) {
+            answer++;
+            return;
+        }
         return;
     }
     
-    dfs(idx+1, sum + s_numbers[idx]);
-    dfs(idx+1, sum - s_numbers[idx]);
+    
+    dfs(idx+1, sum - arr[idx]);
+    dfs(idx+1, sum + arr[idx]);
 }
 
-
-
 int solution(vector<int> numbers, int target) {
-    s_numbers = numbers;
-    s_target = target;
-    answer = 0;
-    
-    dfs(0,0);
+    arr = numbers; K = target;
+    dfs(0, 0);
     
     return answer;
 }
