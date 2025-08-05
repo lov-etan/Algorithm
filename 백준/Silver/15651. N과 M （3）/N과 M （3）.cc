@@ -1,33 +1,33 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
-//완전한 n중 for문 - 중복 가능 
 
 int N, M;
-vector<int> sel;
+vector<int> picks;
 
-void nCm (int sIdx) {
+void dfs(int sIdx) {
     if(sIdx == M) {
-        for(int i=0; i<M; i++) {
-            cout << sel[i] << " ";
+        for(auto num : picks) {
+            cout << num << " ";
         }
         cout << "\n";
         return;
-    }  
-
-    for(int num=1; num<=N; num++) {
-        sel[sIdx] = num;
-        nCm(sIdx+1);
     }
+
+    for(int i=1; i<=N; i++) {
+        picks.push_back(i);
+        dfs(sIdx+1);
+        picks.pop_back();
+    }
+
+    return;
 }
 
 int main() {
+    cin.tie(0); cout.tie(0); ios::sync_with_stdio(0);
     cin >> N >> M;
-    sel.assign(M, 0);
-
-    nCm(0);
-    
-
-
-    
+    dfs(0);
     return 0;
 }
