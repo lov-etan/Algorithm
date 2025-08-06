@@ -1,32 +1,33 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
-//본인 포함 for문
 
 int N, M;
-vector<int> sel;
+vector<int> picks;
 
-void nCm (int sIdx, int curr) {
-
+void dfs(int s, int sIdx) {
     if(sIdx == M) {
-        for(int i=0; i<M; i++) {
-            cout << sel[i] << " ";
+        for(auto num : picks) {
+            cout << num << " ";
         }
         cout << "\n";
         return;
     }
 
-    for(int nxt=curr; nxt<=N; nxt++ ) {
-        sel[sIdx] = nxt;
-        nCm(sIdx+1, nxt);
+    for(int i=s; i<=N; i++) {
+        picks.push_back(i);
+        dfs(i, sIdx+1);
+        picks.pop_back();
     }
-
+    return;
 }
 
 int main() {
+    cin.tie(0); cout.tie(0); ios::sync_with_stdio(0);
     cin >> N >> M;
-    sel.assign(M, 0);
-
-    nCm(0, 1);
-        
+    
+    dfs(1, 0);
     return 0;
 }
