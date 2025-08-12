@@ -16,8 +16,7 @@ bool inRange(int r, int c) {
 }
 
 bool checkDiag(int r, int c) {
-
-    for(int d=0; d<2; d++) {
+    for(int d=0; d<2; d++) { // dfs이니까 위에만 보면 된다.
         int nr = r;
         int nc = c;
         while(1) {
@@ -34,24 +33,20 @@ bool checkDiag(int r, int c) {
     return true;
 }
 
-void dfs(int qIdx, int r) { // 놓은 퀸의 개수 / 위치
-    if(qIdx == N) {
+void dfs(int r) { // 한 행에 한 퀸을 놓아야 N개를 놓을 수 있다.
+    if(r == N) {
         ans++;
         return;
     }
 
-    if(r == N) return;
-
     for(int c=0; c<N; c++) {
-        if(!visCol[c] && !visRow[r] && checkDiag(r,c)) {
+        if(!visCol[c] && checkDiag(r,c)) {
             visCol[c] = true;
-            visRow[r] = true;
             maps[r][c] = true;
             
-            dfs(qIdx+1, r+1);
+            dfs(r+1);
     
             visCol[c] = false;
-            visRow[r] = false;
             maps[r][c] = false;
         }
     }
@@ -66,7 +61,7 @@ int main() {
     visCol.resize(N,false);
     visRow.resize(N,false);
 
-    dfs(0,0);
+    dfs(0);
     cout << ans;
     return 0;
 }
