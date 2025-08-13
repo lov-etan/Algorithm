@@ -3,40 +3,36 @@
 
 using namespace std;
 
-int main() {
-    int N; long K;
-    cin >> N >> K;
+int N;
+long long K;
+vector<int> courses;
 
-    vector<int> v(N+1, 0);
+int main() {
+    cin >> N >> K;
+    courses.resize(N+1, 0);
 
     for(int i=1; i<=N; i++) {
-        cin >> v[i];
+        cin >> courses[i];
     }
 
     int idx = 1;
-    bool isReturn = false;
+    bool goBack = false;
     while(1) {
-
-        long left = K - v[idx];
-        // cout << idx << "에서" << left << "\n";
-
-        if(left < 0) {
+        K -= courses[idx];
+        if(K < 0) {
             cout << idx;
-            break;
+            return 0;
         }
 
-        if(!isReturn) {
+        if(!goBack) {
             idx++;
             if(idx > N) {
-                isReturn = true;
+                goBack = true;
                 idx--;
             }
         } else {
             idx--;
         }
-
-        K = left;
-
         
     }
     
