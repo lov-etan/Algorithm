@@ -1,5 +1,5 @@
--- 코드를 입력하세요
+# El 이 포함된 이름 찾기
 SELECT animal_id, name
-FROM animal_ins
-WHERE name LIKE '%el%' AND animal_type = 'DOG'
+FROM ANIMAL_INS
+WHERE name LIKE '%el%' AND animal_type = 'Dog'
 ORDER BY 2
