@@ -1,5 +1,4 @@
--- 코드를 입력하세요
-SELECT LEFT(product_code, 2) as category, count(*) as products
-FROM product
+SELECT LEFT(product_code, 2) as CATEGORY, COUNT(product_id) as PRODUCTS
+FROM PRODUCT
 GROUP BY 1
 ORDER BY 1
