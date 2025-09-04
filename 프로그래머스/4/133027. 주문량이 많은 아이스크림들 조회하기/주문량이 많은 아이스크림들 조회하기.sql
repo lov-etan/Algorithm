@@ -1,6 +1,11 @@
-SELECT F.FLAVOR
-FROM FIRST_HALF F 
-JOIN (SELECT flavor, SUM(total_order) as july_total FROM july GROUP BY flavor) as j
-ON F.FLAVOR = J.FLAVOR
-ORDER BY F.TOTAL_ORDER + july_total DESC
-LIMIT 3;
+WITH cte AS (
+    SELECT f.flavor, (f.total_order + sum(j.total_order)) as sum_order
+    FROM FIRST_HALF as f
+        JOIN JULY as j ON f.flavor = j.flavor
+    GROUP BY 1
+) 
+
+SELECT flavor
+FROM cte
+ORDER BY sum_order DESC
+LIMIT 3
