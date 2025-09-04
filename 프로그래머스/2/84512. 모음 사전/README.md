@@ -1,10 +1,10 @@
 # [level 2] 모음 사전 - 84512 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/84512?language=java) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/84512?language=cpp) 
 
 ### 성능 요약
 
-메모리: 85.5 MB, 시간: 4.98 ms
+메모리: 4.17 MB, 시간: 1.93 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 03월 29일 07:58:07
+2025년 09월 04일 11:19:38
 
 ### 문제 설명
 
