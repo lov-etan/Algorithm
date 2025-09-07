@@ -3,35 +3,38 @@
 #include <algorithm>
 
 using namespace std;
-vector<vector<string>> t;
-vector<bool> visited(t.size(), false);
 vector<string> answer;
+int n; bool found = false;
+vector<vector<string>> tickets2;
+vector<string> picks;
+vector<bool> vis;
 
-bool dfs(string curr, int cnt) {
-    answer.push_back(curr);
-    if(cnt == t.size()) {
-        return true;
+void dfs(int cnt, string curr) {
+    if(found) return;
+    if(cnt == n) {
+        answer = picks;
+        found = true;
+        return;
     }
     
-    for(int i=0; i<t.size(); i++) {
-        if(!visited[i] && t[i][0] == curr) {
-            visited[i] = true;
-            if(dfs(t[i][1], cnt+1)) {
-                return true;
-            } else {
-                visited[i] = false;
-                answer.pop_back();
-            }
+    for(int i=0; i<n; i++) {
+        if(!vis[i] && tickets2[i][0] == curr) {
+            string nxt = tickets2[i][1];
+            vis[i] = true; picks.push_back(nxt);
+            dfs(cnt+1, nxt);
+            vis[i] = false; picks.pop_back();
         }
     }
-    
-    return false;
 }
 
 vector<string> solution(vector<vector<string>> tickets) {
-    t = tickets;
-    visited.resize(t.size(), false);
-    sort(t.begin(), t.end());
-    dfs("ICN", 0);
+
+    sort(tickets.begin(), tickets.end());
+    tickets2 = tickets; n = tickets.size();
+    vis.resize(n, false);
+    
+    picks.push_back("ICN");
+    dfs(0, "ICN");
+    
     return answer;
 }
