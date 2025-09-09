@@ -1,7 +1,7 @@
-# 보호소 들어온 기록 X + 입양 간 기록 O
-SELECT outs.animal_id, outs.name
-FROM animal_ins as ins
-    RIGHT JOIN animal_outs as outs 
-    ON ins.animal_id = outs.animal_id
-WHERE ins.animal_id IS NULL
+-- out에는 있는데 in에는 없는 애들 찾아라!
+SELECT o.animal_id, o.name
+FROM ANIMAL_INS as i
+    RIGHT JOIN ANIMAL_OUTS as o
+    ON i.ANIMAL_ID = o.ANIMAL_ID
+WHERE i.ANIMAL_ID IS NULL
 ORDER BY 1,2
