@@ -5,7 +5,6 @@
 
 using namespace std;
 int INF = 98765432;
-int minAns = INF;
 int N; int sr,sc, er,ec;
 vector<vector<char>> maps;
 vector<vector<vector<int>>> dp;
@@ -77,12 +76,11 @@ int main() {
     }
     
     bfs();
-    // minAns를 여기서 계산합니다.
-    int finalMinAns = INF;
+    int minAns = INF;
     for(int d=0; d<4; d++){
-        finalMinAns = min(finalMinAns, dp[er][ec][d]);
+        minAns = min(minAns, dp[er][ec][d]);
     }
 
-    cout << finalMinAns;
+    cout << minAns;
     return 0;
 }
