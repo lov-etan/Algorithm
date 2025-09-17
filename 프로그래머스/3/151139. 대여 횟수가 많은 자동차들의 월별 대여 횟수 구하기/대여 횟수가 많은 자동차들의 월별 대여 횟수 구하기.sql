@@ -1,19 +1,16 @@
-WITH filtered AS (
-    SELECT car_id
-    FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY 
-    WHERE start_date BETWEEN '2022-08-01' AND '2022-10-31'
+# 2022-08 ~ 2022-10 : 총 대여 횟수가 5회!
+# 월별 자동자ID별 대여 횟수
+WITH cte AS (
+    SELECT *
+    FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
+    WHERE start_date >= '2022-08-01' && start_date <= '2022-10-31'
     GROUP BY car_id
-    HAVING count(car_id) >= 5
+    HAVING count(history_id) >= 5
 )
 
-SELECT MONTH(a.start_date) as month, a.car_id, count(a.car_id) as records
-FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY as a JOIN filtered as b ON a.car_id = b.car_id
-WHERE start_date BETWEEN '2022-08-01' AND '2022-10-31'
+SELECT MONTH(h.start_date) as month, h.car_id, count(c.history_id) as records
+FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY as h
+    JOIN cte as c ON h.car_id = c.car_id
+WHERE h.start_date >= '2022-08-01' && h.start_date <= '2022-10-31'
 GROUP BY 1,2
-ORDER BY 1, 2 DESC;
-
-# SELECT * 
-#     FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY 
-#     WHERE DATE_FORMAT(start_date, "%Y-%m-%d") BETWEEN '2022-08' AND '2022-10'
-#     GROUP BY car_id
-#     HAVING count(car_id) >= 5;
+ORDER BY 1, 2 DESC
