@@ -1,11 +1,11 @@
-# 음식종류별, 즐겨찾기수가 가장 많은! - 음식 종류, ID, 식당이름, 즐겨찾기수 조회
-WITH filtered AS (
-    SELECT food_type, MAX(favorites)
+# 음식종류별 즐겨찾기수가 가장 많은 식당은?
+WITH cte AS (
+    SELECT FOOD_TYPE, MAX(FAVORITES) as MAX_FAVORITES
     FROM REST_INFO
-    GROUP BY food_type
+    GROUP BY 1
 )
 
-SELECT food_type, rest_id, rest_name, favorites
-FROM REST_INFO
-WHERE (food_type, favorites) IN (SELECT * FROM filtered)
-ORDER BY food_type DESC;
+SELECT c.food_type, r.rest_id, r.rest_name, r.favorites
+FROM rest_info as r
+    JOIN cte as c ON r.food_type = c.food_type AND r.favorites = c.max_favorites
+ORDER BY 1 DESC
