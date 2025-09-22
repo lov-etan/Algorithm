@@ -1,15 +1,12 @@
-# 식품분류별로 가격이 제일 비싼 식품!의 분류, 가격, 이름
-# 과자 국 김치 식용유만 궁금
-WITH filtered AS (
-    SELECT category, max(price)
+# 식품분류별로 - 제일 비싼 식품의 가격, 이름은?
+WITH cte AS (
+    SELECT category, max(price) as max_price
     FROM FOOD_PRODUCT
     WHERE category IN ('과자', '국', '김치', '식용유')
-    GROUP BY category
+    GROUP BY 1
 )
 
-SELECT category, price as max_price, product_name
-FROM FOOD_PRODUCT
-WHERE (category, price) IN (SELECT * FROM filtered)
+SELECT c.category, c.max_price, f.product_name
+FROM food_product as f
+    JOIN cte as c ON f.CATEGORY = c.CATEGORY AND f.price = c.max_price
 ORDER BY 2 DESC
-
-
