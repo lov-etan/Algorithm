@@ -1,47 +1,42 @@
 #include <string>
 #include <vector>
-#include <queue>
 
 using namespace std;
-queue<pair<string,int>> q;
-vector<bool> vis;
-vector<string> wrds;
-string t;
+int INF = 98765432;
+int ans = INF;
+string b, t;
+vector<string> arr;
+vector<bool> used;
 
-bool Diff1(string a, string b) {
+bool check(string s1, string s2) {
     int cnt = 0;
-    for(int i=0; i<a.length(); i++) {
-        if(a[i] != b[i]) cnt++;
+    for(int i=0; i<s1.size(); i++) {
+        if(s1[i] != s2[i]) cnt++;
     }
-    
-    if(cnt==1) return true;
-    return false;
+    return cnt==1;
 }
 
-int bfs(string begin) {
-    q.push({begin, 0});
+void dfs(string curr, int cnt) {
+    if(curr == t) {
+        ans = min(ans, cnt);
+        return;
+    }
+    if(ans < cnt) return;
     
-    while(!q.empty()) {
-        auto [curr, cnt] = q.front(); q.pop();
-        if(curr == t) {
-            return cnt;
-        }
-        
-        for(int i=0; i<wrds.size(); i++) {
-            if(!vis[i] && Diff1(wrds[i], curr)) {
-                vis[i] = true;
-                q.push({wrds[i], cnt+1});
-             }
+    for(int i=0; i<arr.size(); i++) {
+        if(!used[i] && check(curr, arr[i])) {
+            used[i] = true;
+            dfs(arr[i], cnt+1);
+            used[i] = false;
         }
     }
-    
-    return 0;
 }
 
 int solution(string begin, string target, vector<string> words) {
-    vis.resize(words.size(), false);
-    wrds = words;
-    t = target;
+    b = begin; t = target; arr = words;
+    used.resize(arr.size(), false);
     
-    return bfs(begin);
+    dfs(b, 0);
+    if(ans == INF) return 0;
+    else return ans;
 }
