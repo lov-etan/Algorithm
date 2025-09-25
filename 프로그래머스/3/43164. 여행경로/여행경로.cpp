@@ -3,38 +3,37 @@
 #include <algorithm>
 
 using namespace std;
-vector<string> answer;
-int n; bool found = false;
-vector<vector<string>> tickets2;
+vector<vector<string>> tarr;
+vector<int> used;
+vector<string> ans;
 vector<string> picks;
-vector<bool> vis;
+bool isS = false;
 
-void dfs(int cnt, string curr) {
-    if(found) return;
-    if(cnt == n) {
-        answer = picks;
-        found = true;
+void dfs(int cnt, string start) {
+    if(isS) return;
+    
+    if(cnt == tarr.size()) {
+        ans = picks;
+        isS = true;
         return;
     }
     
-    for(int i=0; i<n; i++) {
-        if(!vis[i] && tickets2[i][0] == curr) {
-            string nxt = tickets2[i][1];
-            vis[i] = true; picks.push_back(nxt);
-            dfs(cnt+1, nxt);
-            vis[i] = false; picks.pop_back();
+    for(int i=0; i<tarr.size(); i++) {
+        if(!used[i] && tarr[i][0] == start) {
+            used[i] = true; picks.push_back(tarr[i][1]);
+            dfs(cnt+1, tarr[i][1]);
+            used[i] = false; picks.pop_back();
         }
     }
 }
 
 vector<string> solution(vector<vector<string>> tickets) {
-
-    sort(tickets.begin(), tickets.end());
-    tickets2 = tickets; n = tickets.size();
-    vis.resize(n, false);
+    tarr = tickets;
+    used.resize(tickets.size());
+    sort(tarr.begin(), tarr.end());
     
     picks.push_back("ICN");
     dfs(0, "ICN");
     
-    return answer;
+    return ans;
 }
