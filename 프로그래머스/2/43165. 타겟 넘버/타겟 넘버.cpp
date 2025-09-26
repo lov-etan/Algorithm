@@ -6,16 +6,16 @@ int answer = 0;
 vector<int> nums;
 int t;
 
-void dfs(int sum, int idx) {
-        
-    if(idx == nums.size()) {
-        if(t == sum) {
-            answer++;
-        }
+void dfs(int idx, int sum) {
+    if(idx == (int)nums.size()) {
+        if(sum == t) answer++;
         return;
     }
-    dfs(sum-nums[idx], idx+1);
-    dfs(sum+nums[idx], idx+1);
+    
+    // 더한다
+    dfs(idx+1, sum + (-1)*nums[idx]);
+    // 뺀다
+    dfs(idx+1, sum + nums[idx]);
 }
 
 int solution(vector<int> numbers, int target) {
@@ -23,5 +23,6 @@ int solution(vector<int> numbers, int target) {
     t = target;
     
     dfs(0, 0);
+    
     return answer;
 }
