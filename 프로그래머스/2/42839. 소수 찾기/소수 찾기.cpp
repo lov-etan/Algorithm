@@ -1,43 +1,52 @@
 #include <string>
 #include <vector>
-#include <unordered_set>
-#include <cmath>
 #include <iostream>
+#include <algorithm>
+#include <set>
+#include <cmath>
 
 using namespace std;
-
 string s;
-vector<bool> vis;
-unordered_set<int> sets;
+set<int> sets;
+vector<bool> used;
 
 bool isPrime(int num) {
-    for(int i=2; i <= sqrt(num); i++) {
-        if(num % i == 0) return false;
+    if(num == 1) return false;
+    for(int i=2; i<=sqrt(num); i++) {
+        if(num%i == 0) return false;
     }
     return true;
 }
 
-void dfs(int num) {
-    if(num > 1) {
-        if(isPrime(num)) {
-            sets.insert(num);
-        }
+void dfs(int cnt, int sum) {
+    if(sum != 0) sets.insert(sum);
+    if(cnt == s.size()) return;
+    
+    int tmp = -1;
+    for(int i=0; i<s.size(); i++) {
+        int curr = s[i]-'0';
+        if(used[i] || tmp == curr) continue;
+        
+        used[i] = true;
+        
+        dfs(cnt+1, sum*10+curr);
+        
+        used[i] = false;
+        tmp = curr;
     }
     
-    for(int i=0; i<s.size(); i++) {
-        if(!vis[i]) {
-            vis[i] = true;
-            dfs(num*10 + s[i]-'0');
-            vis[i] = false;
-        }
-    }
 }
 
 int solution(string numbers) {
-    vis.resize(numbers.size(), false);
+    int answer = 0;
     s = numbers;
-    
-    dfs(0);
-    int answer = sets.size();
+    sort(s.begin(), s.end());
+    used.resize(s.size(), false);
+    dfs(0,0);
+    for(auto s : sets) {
+        if(isPrime(s)) {
+            answer++;
+        }
+    }
     return answer;
 }
