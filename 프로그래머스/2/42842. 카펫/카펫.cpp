@@ -1,22 +1,25 @@
-#include <iostream>
 #include <string>
 #include <vector>
 
 using namespace std;
+int b, y;
 
 vector<int> solution(int brown, int yellow) {
+    b = brown; y = yellow;
     vector<int> answer;
-    for(int a=1; a<= yellow; a++) {
-        int b = 0;
-        if(yellow % a == 0) {
-            b = yellow / a;
-        }
-        
-        int tmp = (b+2)*2 + (a+2)*2 -4;
-        if(brown == tmp) {
-            answer.push_back(b+2); answer.push_back(a+2);
+    
+    int by = brown/2;
+    int tmpC = 1;
+    while(1) {
+        int tmpR = by - tmpC;
+        int r = tmpR+1; int c = tmpC+1;
+        int total = r*c;
+        if(total - brown == yellow) {
+            answer.push_back(r); answer.push_back(c);
             break;
         }
+        tmpC++;
+        
     }
     return answer;
 }
