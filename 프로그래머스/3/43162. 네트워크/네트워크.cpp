@@ -1,38 +1,32 @@
 #include <string>
 #include <vector>
-#include <queue>
 
 using namespace std;
-int N;
+int N; 
 vector<vector<int>> coms;
 vector<bool> vis;
-queue<int> q;
 
-void bfs(int start) {
-    vis[start] = true;
-    q.push(start);
+void dfs(int idx) {
+    if(idx == N) return;
     
-    while(!q.empty()) {
-        int curr = q.front(); q.pop();
-        
-        for(int nxt=0; nxt<N; nxt++) {
-            if(!vis[nxt] && coms[curr][nxt]==1) {
-                vis[nxt] = true;
-                q.push(nxt);
-            }
+    for(int i=0; i<N; i++) {
+        if(!vis[i] && coms[idx][i] == 1) {
+            vis[i] = true;
+            dfs(i);
         }
     }
 }
 
 int solution(int n, vector<vector<int>> computers) {
     int answer = 0;
-    coms = computers; N = n;
-    vis.resize(n,false);
+    N = n; coms = computers;
+    vis.resize(N,false);
     
-    for(int i=0; i<n; i++) {
+    for(int i=0; i<N; i++) {
         if(!vis[i]) {
-            bfs(i);
             answer++;
+            vis[i] = true;
+            dfs(i);
         }
     }
     
