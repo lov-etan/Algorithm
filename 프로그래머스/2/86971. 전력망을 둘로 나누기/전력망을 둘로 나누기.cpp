@@ -1,47 +1,47 @@
-#include <iostream>
 #include <string>
 #include <vector>
-
+#include <queue>
+#include <algorithm>
 using namespace std;
-vector<int> p;
 
-int find(int a) {
-    if(p[a] == a) {
-        return a;
-    } else {
-        return p[a] = find(p[a]);
+int N;
+vector<vector<int>> ws;
+vector<bool> vis;
+
+int bfs(int start) {
+    queue<int> q;
+    q.push(start);
+    int cnt = 0;
+    
+    while(!q.empty()) {
+        int curr = q.front(); q.pop();
+        cnt++;
+        
+        for(int i=0; i<N-1; i++) {
+            int a = ws[i][0];  int b = ws[i][1];
+            if(curr == a && !vis[b]) {
+                vis[b] = true;
+                q.push(b);
+            } else if(curr == b && !vis[a]) {
+                vis[a]  = true;
+                q.push(a);
+            }
+        }
     }
-}
-
-void Union(int a, int b) {
-    a = find(a); 
-    b = find(b);
-    p[b] = a;
+    return cnt;
 }
 
 int solution(int n, vector<vector<int>> wires) {
-    int answer = n+1;
-    int w = wires.size();
+    N = n; ws = wires;
+    int answer = 98765432;
     
-    for(int i=0; i<w; i++) {
-        p.assign(n+1, 0);
-        for(int a=1; a<=n; a++) {
-            p[a] = a;
-        }
+    for(int i=0; i<ws.size(); i++) {
+        vis.assign(n,false);
         
-        for(int k=0; k<w; k++) {
-            if(k==i) continue;
-            int a = wires[k][0]; int b = wires[k][1];
-            Union(a,b);
-        }
-        
-        int p1 = find(p[1]); int cnt1 = 0; int cnt2 =0;
-        for(int a=1; a<=n; a++) {
-            if(find(p[a]) == p1) cnt1++;
-            else cnt2++;
-        }
-        
-        answer = min(answer, abs(cnt1 - cnt2));
+        int a = ws[i][0];  int b = ws[i][1];
+        vis[a] = true; vis[b] = true;
+        answer = min(abs(bfs(a)-bfs(b)), answer);
     }
+    
     return answer;
 }
