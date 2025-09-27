@@ -1,28 +1,28 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+
 using namespace std;
 int N, M;
-vector<int> sel;
+vector<int> picks;
 
-void nC2(int sIdx, int num) {
-    if(sIdx == M) {
-        for(int i=0; i<M; i++) {
-            cout << sel[i] << " ";
+void dfs(int start, int pIdx) {
+    if(pIdx == M) {
+        for(auto p : picks) {
+            cout << p << " ";
         }
         cout << "\n";
         return;
     }
-
-    for(int i=num; i<=N; i++) {
-        sel[sIdx] = i;
-        nC2(sIdx+1, i+1); //다음 number로 넘겨주기 잊지 않기       
+    
+    for(int i=start; i<=N; i++) {
+        picks.push_back(i); 
+        dfs(i+1, pIdx+1);
+        picks.pop_back(); 
     }
 }
 
 int main() {
     cin >> N >> M;
-    sel.assign(M, 0);
-
-    nC2(0,1);
-    
+    dfs(1, 0);
     return 0;
 }
