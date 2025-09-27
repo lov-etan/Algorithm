@@ -1,29 +1,29 @@
-#include <iostream>
 #include <string>
 #include <vector>
-#include <set>
+#include <iostream>
 
 using namespace std;
-set<string> sets;
-char vows[] = {'A', 'E', 'I', 'O', 'U'};
+int answer = 0;
+string arr = "AEIOU";
+string w;
+int cnt = 0;
 
-void dfs(string str) {
-    if(str != "") {
-        sets.insert(str);
+void dfs(int sIdx, string s) {
+    if(answer != 0 || sIdx == 6) return;
+    if(s != "") cnt++;
+    
+    if(s == w) {
+        answer = cnt;
+        return;
     }
-    if(str.length() >= 5) return;
     
     for(int i=0; i<5; i++) {
-        dfs(str+vows[i]);
+        dfs(sIdx+1 ,s+arr[i]);
     }
 }
 
 int solution(string word) {
-    int answer = 0;
-    dfs("");
-    for(auto str : sets) {
-        answer++;
-        if(str == word) break;
-    }
+    w = word;
+    dfs(0,"");
     return answer;
 }
