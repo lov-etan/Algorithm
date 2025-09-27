@@ -2,36 +2,30 @@
 #include <vector>
 
 using namespace std;
-
 int N, M;
+vector<int> picks;
 vector<bool> vis;
 
-void dfs(vector<int>& ans) {
-    if(ans.size() == M) {
-        for(auto c : ans) {
-            cout << c << " ";
+void dfs(int pIdx) {
+    if(pIdx == M) {
+        for(auto p : picks) {
+            cout << p << " ";
         }
         cout << "\n";
         return;
     }
-
+    
     for(int i=1; i<=N; i++) {
         if(vis[i]) continue;
-        
-        vis[i] = true; ans.push_back(i);
-        dfs(ans);
-        
-        vis[i] = false; ans.pop_back();
+        picks.push_back(i); vis[i] = true;
+        dfs(pIdx+1);
+        picks.pop_back(); vis[i] = false;
     }
-
-    return;
 }
 
 int main() {
-    cin >> N >> M; 
-    vis.resize(N+1, false);
-    vector<int> ans(0);
-    
-    dfs(ans);
+    cin >> N >> M;
+    vis.assign(N, false);
+    dfs(0);
     return 0;
 }
