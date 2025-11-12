@@ -1,42 +1,48 @@
 #include <iostream>
+#include <vector>
 #include <queue>
-#include <set>
 
 using namespace std;
 
-int N, K;
+bool inRange(int r) {
+    return r>=0 && r<=100000;
+}
 
 int main() {
-    cin >> N >> K;
+    vector<bool> vis(100001, false);
+    int N, K; cin >> N >> K;
+    
     queue<pair<int,int>> q;
-    set<int> viss;
-    q.push({N, 0});
+    q.push({0,N});
+    vis[N] = true;
+
 
     while(!q.empty()) {
-        pair<int,int> curr = q.front(); q.pop();
-        int x = curr.first;
-        int t = curr.second;
+        auto[time, curr] = q.front(); q.pop();
+        if(curr == K) {
+            cout << time;
+            exit(0);
+        }
 
+        int nr = 2*curr;
+        if(inRange(nr) && !vis[nr]) {
+            vis[nr] = true;
+            q.push({time, nr});
+        }
 
-        if(x==K) {
-            cout << t;
-            return 0;
+        nr = curr-1;
+        if(inRange(nr) && !vis[nr]) {
+            vis[nr] = true;
+            q.push({time+1, nr});
         }
-        
-        if(2*x <= 100000 && !viss.count(2*x)) {
-            viss.insert(2*x);
-            q.push({2*x, t});
-        }
-        if(x-1>=0 && !viss.count(x-1)) {
-            viss.insert(x-1);
-            q.push({x-1, t+1});
-        }
-        if(x+1 <= 100000 && !viss.count(x+1)) {
-            viss.insert(x+1);
-            q.push({x+1, t+1});
+
+        nr = curr+1;
+        if(inRange(nr) && !vis[nr]) {
+            vis[nr] = true;
+            q.push({time+1, nr});
         }
         
     }
-     
+    
     return 0;
 }
