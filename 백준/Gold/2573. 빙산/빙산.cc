@@ -3,112 +3,113 @@
 #include <queue>
 
 using namespace std;
-
-int N, M; int year;
-int currIceberg;
-vector<vector<int>> maps; vector<vector<int>> dp;
+int N, M;
+vector<vector<int>> maps;
 vector<vector<bool>> vis;
-queue<vector<int>> q;
-queue<vector<int>> q2;
+queue<pair<int,int>> q;
 
-int dr[] = {-1, 0, 1, 0};
-int dc[] = {0, 1, 0, -1};
+int dr[] = {1,0,-1,0};
+int dc[] = {0,1,0,-1};
 
 bool inRange(int r, int c) {
     return r>=0 && r<N && c>=0 && c<M;
 }
 
-void checkingBfs() {
-    while(!q2.empty()) {
-        vector<int> curr = q2.front(); q2.pop();
-        int r = curr[0];
-        int c = curr[1];
-        
-        for(int d=0; d<4; d++) {
-            int nr = r+dr[d];
-            int nc = c+dc[d];
+void print() {
+    for(int r=0; r<N; r++) {
+        for(int c=0; c<M; c++) {
+            cout << maps[r][c] << " ";
+        }
+        cout << "\n";
+    }
+    cout << "\n";
+}
 
-            if(inRange(nr, nc) && !vis[nr][nc] && maps[nr][nc] > 0) {
-                vis[nr][nc] = true; 
+void bfs2(int sr, int sc) {
+    vis[sr][sc] = true;
+    queue<pair<int,int>> q2; 
+    q2.push({sr,sc});
+
+    while(!q2.empty()) {
+        auto[r,c] = q2.front(); q2.pop();
+
+        for(int d=0; d<4; d++) {
+            int nr = r + dr[d];
+            int nc = c + dc[d];
+            if(inRange(nr,nc) && maps[nr][nc] > 0 && !vis[nr][nc]) {
+                vis[nr][nc] = true;
                 q2.push({nr,nc});
             }
         }
     }
 }
 
-bool check() {
-    vis.assign(N, (vector<bool> (M,false)));
-    int cnt = 0;
+void bfs1() {
+    vector<vector<int>> tmps(N, vector<int>(M, 0));
     
-    for(int r=0; r<N; r++) {
-        for(int c=0; c<M; c++) {
-            if(!vis[r][c] && maps[r][c] > 0) {
-                vis[r][c] = true; q2.push({r,c});
-                checkingBfs();
+    while(!q.empty()) {
+        auto[r,c] = q.front(); q.pop();
+        int cnt = 0;
+        
+        for(int d=0; d<4; d++) {
+            int nr = r+dr[d]; int nc = c+dc[d];
+            if(inRange(nr,nc) && maps[nr][nc]==0) {
                 cnt++;
             }
         }
+
+        tmps[r][c] = cnt;
     }
 
-    if(cnt >= 2) return true;
-    return false;
-}
 
-void melting() {
     for(int r=0; r<N; r++) {
         for(int c=0; c<M; c++) {
-            maps[r][c] = max(maps[r][c] + dp[r][c], 0);
+            maps[r][c] -= tmps[r][c];
+            if(maps[r][c] < 0) maps[r][c] = 0;
+            else if(maps[r][c] > 0) q.push({r,c});
+        }
+    }
+}
+
+int main() {
+    cin >> N >> M;
+    
+    maps.resize(N, vector<int>(M, 0));
+    for(int r=0; r<N; r++) {
+        for(int c=0; c<M; c++) {
+            cin >> maps[r][c];
             if(maps[r][c] > 0) {
                 q.push({r,c});
             }
         }
     }
-}
 
-int bfs() {
-    if(check()) return year;
-    if(q.size() == 0) return 0;
+    int answer = 0;
+    int year = 0;
 
-    int doneIce = q.size();
-    dp.assign(N, vector<int>(M,0));
-    while(doneIce > 0) {
-        vector<int> curr = q.front(); q.pop();
-        int r = curr[0];
-        int c = curr[1];
-        doneIce--;
+    while(!q.empty()) {
+        year++;
+        bfs1();
+        // print();
 
-        for(int d=0; d<4; d++) {
-            int nr = r + dr[d];
-            int nc = c + dc[d];
-
-            if(inRange(nr, nc) && maps[nr][nc] == 0) {
-                dp[r][c]--;
-            }
-        }
-
-    }
-    year++;
-
-    melting();
-    return bfs();
-}
-
-int main() {
-    cin >> N >> M;
-    maps.resize(N, vector<int>(M));
-
-    for(int r=0; r<N; r++) {
-        for(int c=0; c<M; c++) {
-            int in; cin >> in;
-            maps[r][c] = in;
-            if(in > 0) {
-                q.push({r, c});
-                currIceberg++;
+        int cnt  = 0;
+        vis.assign(N, vector<bool>(M, false));
+        for(int r=0; r<N; r++) {
+            for(int c=0; c<M; c++) {
+                if(maps[r][c] > 0 && !vis[r][c]) {
+                    bfs2(r,c);
+                    cnt++;
+                    if(cnt >= 2) {
+                        cout << year;
+                        exit(0);
+                    }
+                }
             }
         }
     }
 
-    cout << bfs();
+    cout << answer;
+    
     
     return 0;
 }
