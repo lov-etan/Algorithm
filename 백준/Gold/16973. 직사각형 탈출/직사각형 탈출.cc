@@ -1,80 +1,70 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <tuple>
 
 using namespace std;
-
-int N, M, H, W, sr, sc, fr, fc;
-int ans;
+int N, M; int H, W; 
+int sr, sc, fr, fc;
 vector<vector<int>> maps;
-vector<vector<int>> prefix;
-vector<vector<int>> dp;
-queue<pair<int,int>> q;
+vector<vector<int>> dp; // dp[r][c] = 그때까지의 벽 누적합
+vector<vector<bool>> vis;
+queue<tuple<int,int,int>> q;
 
-int dr[] = {-1,0,1,0};
+int dr[] = {1,0,-1,0};
 int dc[] = {0,1,0,-1};
 
 bool inRange(int r, int c) {
-    int endR = r+H-1; int endC = c+W-1;
-    return r>=1 && r<=N && endR >=1 && endR <=N && c>=1 && c<=M && endC >=1 && endC<=M;
+    return r>=1 && r<=N && c>=1 && c<=M;
 }
 
-bool possible(int r, int c) {
-    int endR = r+H-1; int endC = c+W-1;
-    int sum = 0;
-    sum = prefix[endR][endC] - prefix[r-1][endC] - prefix[endR][c-1] + prefix[r-1][c-1];
-    if(sum == 0) return true;
-    return false;
+bool check(int sx, int sy) {
+    int ex = sx+H-1; int ey = sy+W-1;
+    if(!inRange(ex, ey)) return false;
+
+    int cCnt = dp[ex][ey] - dp[sx-1][ey] - dp[ex][sy-1] + dp[sx-1][sy-1];
+    if(cCnt > 0) return false;
+    return true;
+    
 }
 
-void bfs() {
+int bfs() {
+    vis[sr][sc] = true;
+    q.push({sr,sc,0});
+
     while(!q.empty()) {
-        pair<int, int> curr = q.front(); q.pop();
-        int r = curr.first;
-        int c = curr.second;
-
-        if(r==fr && c==fc) {
-            ans = dp[r][c];
-            return;
-        }
+        auto[r,c, cnt] = q.front(); q.pop();
+        if(r == fr && c == fc) return cnt;
+        
 
         for(int d=0; d<4; d++) {
-            int nr = r + dr[d];
-            int nc = c + dc[d];
+            int nr = r + dr[d]; int nc = c + dc[d];
 
-            if(inRange(nr, nc) && dp[nr][nc] == 0 && possible(nr, nc)) {
-                dp[nr][nc] = dp[r][c] + 1;
-                q.push({nr,nc});
+            if(inRange(nr,nc) && maps[nr][nc] == 0 && !vis[nr][nc] && check(nr,nc)) {
+                vis[nr][nc] = true;
+                q.push({nr,nc,cnt+1});
             }
         }
     }
 
-    return;
+    return -1;
 }
 
 int main() {
     cin.tie(0); cout.tie(0); ios::sync_with_stdio(0);
     cin >> N >> M;
-    maps.resize(N+1, vector<int>(M+1, 0));
-    dp.resize(N+1, vector<int>(M+1, 0));
-    prefix.resize(N+1, vector<int>(M+1, 0));
-    for(int r=1; r<=N; r++) {
-        for(int c=1; c<=M; c++) {
-            int in; cin >> in;
-            maps[r][c] = in;
-        }
-    }
-
-    for(int r=1; r<=N; r++) {
-        for(int c=1; c<=M; c++) {
-            prefix[r][c] = maps[r][c] + prefix[r-1][c] + prefix[r][c-1] - prefix[r-1][c-1];
-        }
-    }
+    maps.resize(N+1, vector<int>(M+1,0));
+    dp.resize(N+1, vector<int>(M+1,0));
+    vis.resize(N+1, vector<bool>(M+1,false));
     
+    for(int r=1; r<=N; r++) {
+        for(int c=1; c<=M; c++) {
+            cin >> maps[r][c];
+            dp[r][c] = maps[r][c] + dp[r-1][c] + dp[r][c-1] - dp[r-1][c-1];
+        }
+    }
     cin >> H >> W >> sr >> sc >> fr >> fc;
-    dp[sr][sc] = 1; q.push({sr,sc}); 
 
-    bfs();
-    cout << ans-1;
+    cout << bfs();
     return 0;
 }
