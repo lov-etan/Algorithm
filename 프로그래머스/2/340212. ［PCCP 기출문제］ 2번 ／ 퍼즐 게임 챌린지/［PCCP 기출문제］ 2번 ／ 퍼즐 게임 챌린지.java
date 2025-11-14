@@ -1,55 +1,47 @@
-import java.util.*;
 class Solution {
-    int n;
-    int[] diffs;
-    int[] times;
-    long limit;
+    int N;
+    int[] diffs, times;
+    long limit; 
+    
+    boolean Play(int level) {
+        long time = times[0];
+        
+        for(int i=1; i<N; i++) {
+            int diff = diffs[i];
+            if(diff <= level) time += times[i];
+            else {
+                int cnt = diff-level;
+                time += (times[i]+times[i-1])*cnt + times[i];
+            }
+            if(time > limit) return false;
+        }
+        
+        return time <= limit;
+    }
     
     public int solution(int[] diffs, int[] times, long limit) {
+        N = diffs.length;
         this.diffs = diffs;
         this.times = times;
         this.limit = limit;
-        int answer = 0;
-        n = diffs.length;
         
-        //right 범위 설정을 위해 diff 중 최대로 나올 수 있는 수 구하기
-        int maxDiff = 0;
-        for(int i=0; i<n; i++){
-            maxDiff = Math.max(diffs[i], maxDiff);
+        int maxDiff = -1;
+        for(int i=0; i<N; i++) {
+            maxDiff = Math.max(maxDiff, diffs[i]);
         }
         
-        //level의 범위
-        int left = 1; //양의 정수
-        int right = maxDiff + 1;
-        
-        //이분 탐색
-        while(left < right){
-            int level = (left+right)/2; //mid = Level
-            long time = play(level); 
-            
-            if(time <= limit) {
-                right = level; //시간이 남아나(limit까지 여유가 있어) -> Level 더 줄여봐 
-                answer = level; //limit이랑 같아? -> 더 줄여봐(우린 최소 Level을 원해)
+        int answer = 0;
+        int left = 1; int right = maxDiff;
+        while(left <= right) {
+            int mid = (left + right)/2;
+            if(Play(mid)) {
+                answer = mid;
+                right = mid-1;
             } else {
-                left = level+1; //시간 초과 -> Level 키우자 
+                left = mid+1;
             }
         }
         
         return answer;
-    }
-    
-    
-    public long play(int level){
-        long sum = 0;
-        
-        for(int i=0; i<n; i++){
-            if(diffs[i]<=level){
-                sum += times[i];
-            } else {
-                sum += (diffs[i] - level)*(times[i]+times[i-1]) + times[i];
-            }
-        }
-        
-        return sum;
     }
 }
