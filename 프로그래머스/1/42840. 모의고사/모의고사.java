@@ -1,35 +1,36 @@
 import java.util.*;
-
 class Solution {
-    int[] first = {1, 2, 3, 4, 5}; //5
-    int[] second = {2,1,2,3,2,4,2,5}; //8
-    int[] third = {3,3,1,1,2,2,4,4,5,5}; //10
-    int[] scores = new int[3];
+    int one[] = {1,2,3,4,5};
+    int two[] = {2,1,2,3,2,4,2,5};
+    int three[] = {3,3,1,1,2,2,4,4,5,5};
     
     public int[] solution(int[] answers) {
-        int max = 0;
-        ArrayList<Integer> list = new ArrayList<>();
+        int[] answer;
         
-        //점수 계산 
-        for(int i=0; i<answers.length; i++){
-            if(first[(i%5)] == answers[i]) scores[0]++;
-            if(second[(i%8)] == answers[i]) scores[1]++;
-            if(third[(i%10)] == answers[i]) scores[2]++;
+        int maxScore = 0;
+        int[] scores = new int[4];
+        int idx1 = 0; int idx2 = 0; int idx3 = 0;
+        for(int i=0; i<answers.length; i++) {
+            int ans = answers[i];
+            if(ans == one[idx1]) scores[1]++;
+            if(ans == two[idx2]) scores[2]++;
+            if(ans == three[idx3]) scores[3]++;
+            maxScore = Math.max(scores[1], Math.max(scores[2], scores[3]));
+            
+            idx1 = (idx1+1)%5;
+            idx2 = (idx2+1)%8;
+            idx3 = (idx3+1)%10;
         }
         
-        //가장 많이 맞힌 개수는?
-        max = Math.max(scores[0], Math.max(scores[1], scores[2]));
-        
-        //가장 많이 맞힌 사람 나와!
-        for(int j=0; j<3; j++){
-            if(max==scores[j]) list.add(j+1);
+        ArrayList<Integer> arr = new ArrayList<>();
+        for(int i=1; i<=3; i++) {
+            if(scores[i] == maxScore) arr.add(i);
         }
         
-        int[] answer = new int[list.size()];
-        for(int k=0; k<list.size(); k++) {
-            answer[k] = list.get(k);
+        answer = new int[arr.size()];
+        for(int i=0; i<arr.size(); i++) {
+            answer[i] = arr.get(i);
         }
-        
         
         return answer;
     }
