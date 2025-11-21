@@ -1,23 +1,26 @@
 import java.util.*;
 
 class Solution {
-    static int[] numbers;
-    static int answer, target;
-    static void dfs(int idx, int num) {
+    int answer = 0;
+    int[] numbers;
+    int target;
+    HashSet<Integer> sets = new HashSet<>();
+    
+    void dfs(int idx, int sum) {
         if(idx == numbers.length) {
-            if(num == target) answer++;
+            if(sum == target) answer++;
             return;
         }
         
-        dfs(idx+1, num - numbers[idx]);
-        dfs(idx+1, num + numbers[idx]);
+        dfs(idx+1, sum+numbers[idx]);
+        dfs(idx+1, sum-numbers[idx]);
     }
     
     public int solution(int[] numbers, int target) {
         this.numbers = numbers;
         this.target = target;
-        dfs(0,0);
         
+        dfs(0,0);
         return answer;
     }
 }
