@@ -1,76 +1,46 @@
-//최단거리, bfs //0-벽 | 1-갈 수 있는 길
 import java.util.*;
 
 class Solution {
-    int n, m, min;
     int[][] maps;
-    boolean[][] visited;
-    int[] dr = {-1,1,0,0};
-    int[] dc = {0,0,-1,1};
+    int N; int M;
+    boolean[][] vis;
     
-    class pos{
-        int r, c, distance;
+    int dr[] = {1,0,-1,0};
+    int dc[] = {0,1,0,-1};
+    
+    boolean inRange(int r, int c) {
+        return r>=0 && r<N && c>=0 && c<M;
+    }
+    
+    int bfs(int sr, int sc) {
+        Queue<int[]> q = new LinkedList<>();
+        vis[sr][sc] = true;
+        q.add(new int[]{sr,sc,1});
         
-        pos(int r, int c, int distance){
-            this.r = r;
-            this.c = c;
-            this.distance = distance;
+        while(!q.isEmpty()) {
+            int[] curr = q.poll();
+            int r = curr[0]; int c = curr[1]; int cnt = curr[2];
+            if(r == N-1 && c==M-1) return cnt;
+            
+            for(int d=0; d<4; d++) {
+                int nr = r+dr[d];
+                int nc = c+dc[d];
+                
+                if(inRange(nr,nc) && maps[nr][nc] == 1 && !vis[nr][nc]) {
+                    vis[nr][nc] = true;
+                    q.add(new int[]{nr,nc,cnt+1});
+                }
+            }
         }
+        return -1;
     }
     
     public int solution(int[][] maps) {
         this.maps = maps;
-        n = maps.length;
-        m = maps[0].length;
-        visited = new boolean[n][m];
+        N = maps.length; M = maps[0].length;
+        vis = new boolean[N][M];
         
+        return bfs(0,0);
         
-        
-        min = 987654321; // 지나가야 하는 칸의 개수의 최솟값 
-        //내 위치: 0,0 상대위치: n-1, m-1
-        bfs(0,0,1); //r,c
-        
-        
-        int answer = 0;
-        if(min == 987654321) {
-            answer = -1;
-        } else {
-            answer = min;
-        }
-        return answer;
     }
-    
-    void bfs(int x, int y, int distance){
-        Queue<pos> q = new LinkedList<>();
-        q.add(new pos(x,y,distance));
-        visited[x][y] = true;
-        
-        while(!q.isEmpty()) {
-            pos curr = q.poll();
-            int r = curr.r;
-            int c = curr.c;
-            
-            //기저조건
-            if(r == n-1 && c == m-1){
-                min = curr.distance;
-                return;
-            }
-            
-            for(int d=0;d<4;d++){
-                int nr = r + dr[d];
-                int nc = c+ dc[d];
-                
-                if(nr>=0 && nr<n && nc>=0 && nc<m && !visited[nr][nc] && maps[nr][nc] == 1){
-                    visited[nr][nc] = true;
-                    //System.out.println(curr.distance);
-                    q.add(new pos(nr, nc, curr.distance+1));
-                }
-            }
-            
-            
-        }//while
-        
-        return;
-    }
-    
 }
