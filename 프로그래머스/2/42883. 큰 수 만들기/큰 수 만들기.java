@@ -1,26 +1,19 @@
-import java.util.*;
 class Solution {
     public String solution(String number, int k) {
-        String answer = "";
-        StringBuilder sb = new StringBuilder("");
-        int index = 0;
-        int max = 0;
+        StringBuilder sb = new StringBuilder();
+        int len = number.length() - k; // 최종 길이
         
-        for(int i=0; i<number.length()-k; i++){
-            max = 0;
+        for(int i=0; i<number.length(); i++) {
+            char ch = number.charAt(i);
             
-            for(int j=index; j<=i+k; j++){
-                if(max < number.charAt(j)-'0'){
-                    max = number.charAt(j)-'0';
-                    index = j+1;
-                }
+            while(k>0 && sb.length() > 0 && sb.charAt(sb.length()-1) < ch) { // 지금 들어오는 수가 더 큽니다~!! 길을 비키세요~!
+                sb.deleteCharAt(sb.length()-1); // 마지막 원소 out - 가능한 한도 내에 더 큰 수가 들어왔기 때문!
+                k--; // 뺄 수 있는 수 줄여주기
             }
             
-            sb.append(max);
-            
+            sb.append(ch);
         }
         
-        
-        return sb.toString();
+        return sb.substring(0, len);
     }
 }
