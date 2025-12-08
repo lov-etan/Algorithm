@@ -5,56 +5,45 @@
 
 using namespace std;
 
-int N;
+int N, M, V;
 vector<vector<int>> adj;
-vector<int> visDfs;
-vector<int> visBfs;
-
-string dfsAns;
-string bfsAns;
-
-void dfs(int v) {
-    visDfs[v] = true;
-    dfsAns += to_string(v) + " ";
-
-    for(auto nxt : adj[v]) {
-        if(!visDfs[nxt]) {
-            dfs(nxt);
-        }
-    }
-}
+vector<int> vis;
 
 void bfs(int v) {
-
     queue<int> q;
-    visBfs[v] = true;
+    vis[v] = true;
     q.push(v);
 
     while(!q.empty()) {
         int curr = q.front(); q.pop();
-        bfsAns += to_string(curr) + " ";
+        cout << curr << " ";
 
-        for(auto nxt : adj[curr]) {
-            if(!visBfs[nxt]) {
-                visBfs[nxt] = true;
-                q.push(nxt);
-            }
+        for(int nxt : adj[curr]) {
+            if(vis[nxt]) continue;
+            vis[nxt] = true;
+            q.push(nxt);
         }
     }
-    
 }
 
+void dfs(int v) {
+    cout << v << " ";
+
+    for(int nxt : adj[v]) {
+        if(vis[nxt]) continue;
+        vis[nxt] = true;
+        dfs(nxt);
+    }
+}
 
 int main() {
-    int M; int V;
+    cin.tie(0); cout.tie(0); ios::sync_with_stdio(0);
     cin >> N >> M >> V;
-    adj.resize(N+1, vector<int>(0,0));
-    visDfs.resize(N+1, false);
-    visBfs.resize(N+1, false);
 
+    adj.resize(N+1, vector<int>(0));
+    
     for(int i=0; i<M; i++) {
-        int a; int b;
-        cin >> a >> b;
+        int a, b; cin >> a >> b;
         adj[a].push_back(b);
         adj[b].push_back(a);
     }
@@ -62,17 +51,14 @@ int main() {
     for(int i=1; i<=N; i++) {
         sort(adj[i].begin(), adj[i].end());
     }
-
-    // dfs
-    visDfs[V] = true;
-    dfsAns = "";
+    
+    vis.assign(N+1, false);
+    vis[V] = true;
     dfs(V);
+    cout << "\n";
 
-    // bfs
-    bfsAns = "";
+    vis.assign(N+1, false);
     bfs(V);
-
-    cout << dfsAns << "\n" << bfsAns;
     
     return 0;
 }
