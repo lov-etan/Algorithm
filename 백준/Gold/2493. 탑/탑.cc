@@ -1,35 +1,27 @@
 #include <iostream>
-#include <stack>
 #include <vector>
+#include <stack>
 
 using namespace std;
 
 int main() {
+    cin.tie(0); cout.tie(0); ios::sync_with_stdio(0);
 
-    int N = 0;
-    cin >> N;
+    int N; cin >> N;
+    stack<pair<int,int>> st;
+    vector<int> ans(N, 0);
 
-    vector<int> v(N,0);
-    vector<int> answer(N,0);
-    stack<pair<int,int>> st; // <높이, 인덱스>
+    for(int i=1; i<=N; i++) {
+        int h; cin >> h;
 
-    for(int i=0; i<N; i++) {
-        int h;
-        cin >> h; //높이 //9
-
-        while(!st.empty() && st.top().first <h) {
-            st.pop(); //후보지 불가 
+        while(!st.empty() && st.top().first < h) { // 나보다 작으면 다 없애기
+            st.pop();
         }
 
-        if(!st.empty()) { //후보지 존재
-            answer[i] = st.top().second;
-        }
+        if(st.empty()) cout << 0 << " ";
+        else cout << st.top().second << " ";
 
-        st.push({h, i+1});
-    }
-
-    for(int i=0; i<N; i++) {
-        cout << answer[i] << " ";
+        st.push({h, i});
     }
     
     return 0;
