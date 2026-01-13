@@ -4,42 +4,30 @@
 using namespace std;
 
 int main() {
+    cin.tie(0); cout.tie(0); ios::sync_with_stdio(0);
 
-    int H; int W; 
-    cin >> H >> W;
+    int N, M; cin >> N >> M;
+    vector<int> arr(M, 0);
+    int sum = 0;
 
-    int ans = 0;
-
-    vector<int> v(W, 0);
-    for(int i=0; i<W; i++) {
-        cin >> v[i];
+    for(int i=0; i<M; i++) {
+        cin >> arr[i];
     }
-    
-    int point = 0;
-    
-    for(int h = H; h>=0; h--) {
-        // cout << h << "\n";
-        int cnt = 0; //포인터 수 - 2개면 막힌 것
-        int tmp = 0;
-        
-        for(int i=0; i<W; i++) {
-            if(h <= v[i]) {
-                cnt++;
 
-                if(cnt ==2) {
-                    cnt = 1;
-                    ans += tmp;
-                    tmp = 0;
-                }
-            } else if(cnt != 0) { //시작점이 없는 경우에 쌓으면 안된다!
-                tmp++;
-            }
-            
-            
+    int leftMax = arr[0];
+    for(int i=1; i<M-1; i++) {
+
+        int rightMax = 0;
+        for(int j=i+1; j<M; j++) {
+            rightMax = max(arr[j], rightMax);
         }
+
+        int flag = min(leftMax, rightMax);
+        if(flag - arr[i] >= 0) sum += flag - arr[i];
+
+        leftMax = max(leftMax, arr[i]);
     }
 
-    cout << ans;
-    
+    cout << sum;
     return 0;
 }
